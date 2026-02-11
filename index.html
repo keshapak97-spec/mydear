@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя, любимая ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Главное меню -->
+        <div id="main-menu" class="screen active">
+            <h1>Ловец сердечек ❤️</h1>
+            <p class="instructions">Нужно ловить сердечки! Кликайте на сердечки, избегайте бомб!</p>
+            <button id="start-btn" class="btn">СТАРТ</button>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen">
+            <canvas id="game-canvas"></canvas>
+            <div class="controls">
+                <button id="pause-btn" class="btn-small">⏸️ Пауза</button>
+                <button id="menu-btn" class="btn-small">🏠 Меню</button>
+            </div>
+        </div>
+        
+        <!-- Экран победы -->
+<!-- Экран победы -->
+<!-- Экран победы -->
+<div id="win-screen" class="screen">
+    <h2>🎉 ПОБЕДА! 🎉</h2>
+    <div class="golden-coupon">
+        <div class="coupon-corner"></div>
+        <div class="coupon-content">
+            <div class="coupon-title">ПРИЗОВОЙ КУПОН</div>
+            <div class="coupon-main-text">Купон на одну любую игру в Steam</div>
+        </div>
+    </div>
+    <button id="restart-btn" class="btn">Играть снова</button>
+</div>
+    
+    <script src="game.js"></script>
+</body>
+</html>

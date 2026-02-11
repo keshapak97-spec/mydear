@@ -1,0 +1,380 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 400px;
+    height: 600px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+h1 {
+    color: #ff6b8b;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+h2 {
+    color: #4CAF50;
+    margin-bottom: 30px;
+}
+
+.instructions {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    padding: 0 20px;
+    line-height: 1.5;
+}
+
+.btn {
+    background: linear-gradient(45deg, #ff6b8b, #ff8e53);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: pointer;
+    background-image: url('game-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.controls {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.btn-small {
+    background: #6c5ce7;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.btn-small:hover {
+    transform: scale(1.05);
+}
+
+/* Стили для экрана победы */
+#win-screen h2 {
+    color: #ff6b8b;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Стили купона - упрощенная версия */
+/* Золотой купон как на изображении */
+.golden-coupon {
+    width: 90%;
+    max-width: 350px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+    border-radius: 15px;
+    padding: 40px 25px;
+    margin: 30px 0;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    border: 4px solid #daa520;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Times New Roman', serif;
+}
+
+/* Эффект загнутого уголка */
+.coupon-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(225deg, #c19a2f, #8b6914);
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3);
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+}
+
+/* Декоративная рамка */
+.golden-coupon::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid rgba(218, 165, 32, 0.5);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+/* Содержимое купона */
+.coupon-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+/* Заголовок купона */
+.coupon-title {
+    color: #8b4513;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    font-family: 'Georgia', serif;
+}
+
+/* Основной текст */
+.coupon-main-text {
+    color: #2c1810;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 25px 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin: 20px 0;
+    font-family: 'Georgia', serif;
+    border: 1px dashed rgba(139, 69, 19, 0.3);
+}
+
+/* Печать/эмблема */
+.coupon-seal {
+    font-size: 40px;
+    margin-top: 20px;
+    color: #8b4513;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Текстура золота */
+.golden-coupon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 2%, transparent 2.5%),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 2%, transparent 2.5%);
+    background-size: 60px 60px;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+/* Адаптивность */
+@media (max-width: 400px) {
+    .coupon-title {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+    
+    .coupon-main-text {
+        font-size: 18px;
+        padding: 20px 10px;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.screen.active {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn {
+    animation: pulse 2s infinite;
+}
+
+/* Анимация сердечек */
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.heart-collected {
+    animation: heartBeat 0.3s ease-in-out;
+}
+
+/* Улучшение купона */
+.coupon-code {
+    position: relative;
+    overflow: hidden;
+}
+
+.coupon-code:before {
+    content: "❤️";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+}
+
+.coupon-code:after {
+    content: "❤️";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+}
+/* Стили купона как на изображении */
+.coupon {
+    width: 90%;
+    max-width: 320px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    margin: 20px 0;
+    border: 1px solid #e0e0e0;
+    font-family: 'Arial', sans-serif;
+}
+
+.coupon-header {
+    background: #e31837; /* Красный как на картинке */
+    color: white;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.coupon-title {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.coupon-body {
+    padding: 20px 15px;
+    text-align: center;
+}
+
+.coupon-main-text {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.coupon-separator {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    margin: 15px 0;
+}
+
+.coupon-details {
+    margin-top: 15px;
+}
+
+.coupon-code-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.coupon-code {
+    font-size: 24px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #e31837; /* Красный цвет для кода */
+    letter-spacing: 2px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    border: 1px dashed #ddd;
+    margin: 10px 0;
+}
+
+.coupon-instructions {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.coupon-footer {
+    background: #f5f5f5;
+    padding: 10px 15px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+
+.coupon-footer-text {
+    font-size: 13px;
+    color: #666;
+}
