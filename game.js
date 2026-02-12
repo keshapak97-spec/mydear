@@ -448,50 +448,57 @@ spawnObject() {
     }
     
     handleClick(e) {
-        if (!this.gameActive || this.paused || !this.ctx) return;
-        
-        const rect = this.canvas.getBoundingClientRect();
-        const scaleX = this.canvas.width / rect.width;
-        const scaleY = this.canvas.height / rect.height;
-        const x = (e.clientX - rect.left) * scaleX;
-        const y = (e.clientY - rect.top) * scaleY;
-        
-        for (let i = this.objects.length - 1; i >= 0; i--) {
-            const obj = this.objects[i];
-            const centerX = obj.x + obj.width/2;
-            const centerY = obj.y + obj.height/2;
-            const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-            
-            if (distance < obj.width/2) {
-                if (obj.type === 'heart') {
-                    this.score += 10;
-                    this.createParticles(centerX, centerY, '#ff4757');
-                } else {
-                    this.score -= 20;
-                    this.createParticles(centerX, centerY, '#2d3436');
-                }
-                
-                this.objectsClicked++;
-                this.objects.splice(i, 1);
-                
-                // Эффект клика
-                this.canvas.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.canvas.style.transform = 'scale(1)';
-                }, 100);
-                
-                if (this.score >= this.targetScore) {
-                    setTimeout(() => this.winGame(), 300);
-                }
-                
-                if (this.score <= -100) {
-                    setTimeout(() => this.gameOver(), 300);
-                }
-                
-                break;
+    if (!this.gameActive || this.paused || !this.ctx) return;
+
+    const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    // Проходим объекты с конца (чтобы кликались верхние)
+    for (let i = this.objects.length - 1; i >= 0; i--) {
+        const obj = this.objects[i];
+        const centerX = obj.x + obj.width / 2;
+        const centerY = obj.y + obj.height / 2;
+        const distance = Math.hypot(x - centerX, y - centerY);
+
+        // 🔥 УВЕЛИЧЕННЫЙ ХИТБОКС: радиус + динамическая надбавка от скорости
+        const baseRadius = obj.width / 2;
+        const speedBonus = Math.min(obj.speed * 2, 12); // чем быстрее, тем щедрее
+        const hitRadius = baseRadius + 10 + speedBonus;
+
+        if (distance < hitRadius) {
+            // Засчитываем попадание
+            if (obj.type === 'heart') {
+                this.score += 10;
+                this.createParticles(centerX, centerY, '#ff4757');
+            } else {
+                this.score -= 20;
+                this.createParticles(centerX, centerY, '#2d3436');
             }
+
+            this.objectsClicked++;
+            this.objects.splice(i, 1);
+            this.scoreElement.textContent = this.score;
+
+            // Эффект клика (пульсация канваса)
+            this.canvas.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.canvas.style.transform = 'scale(1)';
+            }, 100);
+
+            // Проверка условий
+            if (this.score >= this.targetScore) {
+                setTimeout(() => this.winGame(), 300);
+            }
+            if (this.score <= -100) {
+                setTimeout(() => this.gameOver(), 300);
+            }
+            break; // кликнули один объект – выходим
         }
     }
+}
     
     createParticles(x, y, color) {
         for (let i = 0; i < 8; i++) {
@@ -640,6 +647,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
