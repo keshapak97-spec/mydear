@@ -103,15 +103,16 @@ class HeartCatcherGame {
     }
     
     setCanvasSize() {
-        const container = this.canvas.parentElement;
-        if (container) {
-            this.canvas.width = container.clientWidth;
-            this.canvas.height = container.clientHeight - 60;
-        } else {
-            this.canvas.width = 400;
-            this.canvas.height = 500;
-        }
+    const container = this.canvas.parentElement;
+    if (container) {
+        this.canvas.width = container.clientWidth;
+        this.canvas.height = container.clientHeight - 60;
+        console.log(`📐 Canvas размер: ${this.canvas.width}x${this.canvas.height}`);
+    } else {
+        this.canvas.width = 400;
+        this.canvas.height = 500;
     }
+}
     
     loadImages() {
         this.images.heart = this.createHeartImage();
@@ -211,89 +212,124 @@ class HeartCatcherGame {
     }
     
     startGame() {
-        this.score = 0;
-        this.objects = [];
-        this.gameActive = true;
-        this.paused = false;
-        this.currentSpeed = this.baseSpeed;
-        this.gameTime = 0;
-        this.objectsClicked = 0;
-        this.objectsMissed = 0;
-        this.particles = [];
-        
-        document.getElementById('main-menu').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        
-        if (this.spawnInterval) clearInterval(this.spawnInterval);
-        if (this.gameLoop) clearInterval(this.gameLoop);
-        
-        this.spawnInterval = setInterval(() => this.spawnObject(), 1000);
-        this.gameLoop = setInterval(() => this.update(), 1000/60);
-        
-        this.draw();
-    }
+    console.log('🚀 Запуск игры...');
     
-    spawnObject() {
-        if (this.paused || !this.gameActive) return;
-        
-        const type = Math.random() < this.spawnRates.heart ? 'heart' : 'bomb';
-        const size = 50 + Math.random() * 10;
-        
-        this.objects.push({
-            x: Math.random() * (this.canvas.width - size),
-            y: -size,
-            width: size,
-            height: size,
-            type: type,
-            speed: this.currentSpeed + (Math.random() * 0.3),
-            rotation: 0,
-            rotationSpeed: (Math.random() - 0.5) * 0.02,
-            scale: 1,
-            pulse: 0,
-            pulseSpeed: 0.02,
-            id: Date.now() + Math.random()
-        });
-    }
+    // Сброс параметров
+    this.score = 0;
+    this.objects = [];
+    this.gameActive = true;
+    this.paused = false;
+    this.currentSpeed = this.baseSpeed;
+    this.gameTime = 0;
+    this.objectsClicked = 0;
+    this.objectsMissed = 0;
+    this.particles = [];
+    
+    // Обновляем интерфейс
+    document.getElementById('main-menu').classList.remove('active');
+    document.getElementById('game-screen').classList.add('active');
+    
+    // Убеждаемся, что canvas имеет размер
+    this.setCanvasSize();
+    
+    // Очищаем старые интервалы (на всякий случай)
+    if (this.spawnInterval) clearInterval(this.spawnInterval);
+    if (this.gameLoop) clearInterval(this.gameLoop);
+    if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+    
+    // Запускаем спавн объектов каждые 1000 мс
+    this.spawnInterval = setInterval(() => {
+        if (this.gameActive && !this.paused) {
+            this.spawnObject();
+        }
+    }, 1000);
+    
+    // Запускаем игровой цикл через requestAnimationFrame
+    const gameLoop = () => {
+        if (this.gameActive && !this.paused) {
+            this.update();
+        }
+        this.animationFrame = requestAnimationFrame(gameLoop);
+    };
+    this.animationFrame = requestAnimationFrame(gameLoop);
+    
+    // Первая отрисовка
+    this.draw();
+    
+    console.log('✅ Игровой цикл запущен');
+}
+
+// Обновите метод spawnObject() – добавим больше случайности
+spawnObject() {
+    // Проверка: если игра не активна или на паузе – не спавним
+    if (!this.gameActive || this.paused) return;
+    
+    const type = Math.random() < this.spawnRates.heart ? 'heart' : 'bomb';
+    const size = 45 + Math.random() * 20;
+    
+    // Гарантируем, что объект появится в пределах ширины canvas
+    const maxX = Math.max(0, this.canvas.width - size);
+    const x = Math.random() * maxX;
+    
+    this.objects.push({
+        x: x,
+        y: -size,
+        width: size,
+        height: size,
+        type: type,
+        speed: this.currentSpeed + (Math.random() * 0.5),
+        rotation: 0,
+        rotationSpeed: (Math.random() - 0.5) * 0.03,
+        scale: 1,
+        pulse: 0,
+        pulseSpeed: 0.02 + Math.random() * 0.02,
+        id: Date.now() + Math.random()
+    });
+    
+    // Отладка: показываем, что объект создан
+    console.log(`💖 Создан объект: ${type}, x=${x.toFixed(0)}, скорость=${this.currentSpeed.toFixed(2)}`);
+}
     
     update() {
-        if (!this.gameActive || this.paused) return;
+    if (!this.gameActive || this.paused) return;
+    
+    // Увеличиваем скорость
+    this.currentSpeed += this.speedIncrease;
+    this.gameTime++;
+    
+    // Двигаем объекты
+    for (let i = this.objects.length - 1; i >= 0; i--) {
+        const obj = this.objects[i];
+        obj.y += obj.speed;
+        obj.rotation += obj.rotationSpeed;
         
-        this.currentSpeed += this.speedIncrease;
-        this.gameTime++;
+        if (obj.type === 'heart') {
+            obj.pulse += obj.pulseSpeed;
+            obj.scale = 1 + Math.sin(obj.pulse) * 0.08;
+        }
         
-        for (let i = this.objects.length - 1; i >= 0; i--) {
-            const obj = this.objects[i];
-            
-            obj.y += obj.speed;
-            obj.rotation += obj.rotationSpeed;
-            
+        // Удаляем упавшие объекты
+        if (obj.y > this.canvas.height) {
+            this.objects.splice(i, 1);
             if (obj.type === 'heart') {
-                obj.pulse += obj.pulseSpeed;
-                obj.scale = 1 + Math.sin(obj.pulse) * 0.08;
-            }
-            
-            if (obj.y > this.canvas.height) {
-                this.objects.splice(i, 1);
-                if (obj.type === 'heart') {
-                    this.objectsMissed++;
-                }
+                this.objectsMissed++;
+                console.log('😢 Пропущено сердечек:', this.objectsMissed);
             }
         }
-        
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            const p = this.particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.life--;
-            
-            if (p.life <= 0) {
-                this.particles.splice(i, 1);
-            }
-        }
-        
-        this.draw();
     }
     
+    // Обновляем частицы
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) this.particles.splice(i, 1);
+    }
+    
+    // Отрисовка
+    this.draw();
+}
     draw() {
         if (!this.ctx) return;
         
@@ -557,4 +593,5 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
         console.error('Ошибка при создании игры:', error);
     }
+
 });
