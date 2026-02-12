@@ -28,8 +28,8 @@ class HeartCatcherGame {
         
         // Игровые объекты
         this.objects = [];
-        this.baseSpeed = 1.2;
-        this.speedIncrease = 0.001;
+        this.baseSpeed = 2.2;
+        this.speedIncrease = 0.002;
         this.currentSpeed = this.baseSpeed;
         
         // Статистика
@@ -168,35 +168,80 @@ class HeartCatcherGame {
     }
     
     createBombImage() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 50;
-        canvas.height = 50;
-        
-        ctx.fillStyle = '#2d3436';
-        ctx.shadowColor = 'rgba(45, 52, 54, 0.5)';
-        ctx.shadowBlur = 8;
-        ctx.shadowOffsetY = 3;
-        
-        ctx.beginPath();
-        ctx.arc(25, 25, 18, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = '#e17055';
-        ctx.fillRect(23, 5, 4, 15);
-        
-        ctx.fillStyle = '#ff9f43';
-        ctx.beginPath();
-        ctx.arc(25, 5, 6, Math.PI, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = '#636e72';
-        ctx.beginPath();
-        ctx.arc(25, 25, 5, 0, Math.PI * 2);
-        ctx.fill();
-        
-        return canvas;
-    }
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 55;
+    canvas.height = 55;
+
+    // --- Корпус бомбы (чёрный металл) ---
+    ctx.fillStyle = '#1e1e1e';
+    ctx.shadowColor = 'rgba(0,0,0,0.7)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    ctx.beginPath();
+    ctx.arc(27.5, 27.5, 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Блик на корпусе ---
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.beginPath();
+    ctx.arc(20, 20, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Фитиль (деревянный) ---
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(25, 7, 6, 15);
+    
+    // --- Огонёк на фитиле ---
+    ctx.fillStyle = '#FF4500';
+    ctx.beginPath();
+    ctx.arc(28, 6, 7, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#FF8C00';
+    ctx.beginPath();
+    ctx.arc(28, 7, 5, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.arc(28, 8, 3, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    // --- Череп (белый) ---
+    ctx.fillStyle = '#F0F0F0';
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.arc(27.5, 30, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Глазницы ---
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(24, 28, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(31, 28, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Нос (треугольник) ---
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.moveTo(27.5, 30);
+    ctx.lineTo(26, 33);
+    ctx.lineTo(29, 33);
+    ctx.closePath();
+    ctx.fill();
+
+    // --- Зубы ---
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(24, 36, 2, 3);
+    ctx.fillRect(27, 36, 2, 3);
+    ctx.fillRect(30, 36, 2, 3);
+
+    return canvas;
+}
     
     setupEventListeners() {
         document.getElementById('start-btn').addEventListener('click', () => this.startGame());
@@ -595,3 +640,4 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
