@@ -28,7 +28,7 @@ class HeartCatcherGame {
         
         // Игровые объекты
         this.objects = [];
-        this.baseSpeed = 1.8;
+        this.baseSpeed = 1.5;
         this.speedIncrease = 0.001;
         this.currentSpeed = this.baseSpeed;
         
@@ -640,5 +640,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
