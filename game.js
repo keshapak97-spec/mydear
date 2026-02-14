@@ -515,28 +515,18 @@ spawnObject() {
     }
     
     winGame() {
-    console.log('Победа!');
+    console.log('Победа! Набрано очков:', this.score);
     this.gameActive = false;
-
+    
+    // Останавливаем интервалы и анимацию
+    if (this.spawnInterval) clearInterval(this.spawnInterval);
+    if (this.gameLoop) clearInterval(this.gameLoop);
+    if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+    
+    // Показываем экран победы (без задержки для теста)
     document.getElementById('game-screen').classList.remove('active');
     document.getElementById('win-screen').classList.add('active');
 }
-    
-    // Останавливаем интервалы
-    if (this.spawnInterval) {
-        clearInterval(this.spawnInterval);
-        this.spawnInterval = null;
-    }
-    if (this.gameLoop) {
-        clearInterval(this.gameLoop);
-        this.gameLoop = null;
-    }
-    
-    // Останавливаем requestAnimationFrame, если он используется
-    if (this.animationFrame) {
-        cancelAnimationFrame(this.animationFrame);
-        this.animationFrame = null;
-    }
     
     // Переход на экран победы
     setTimeout(() => {
@@ -657,6 +647,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
