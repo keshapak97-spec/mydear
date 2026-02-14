@@ -480,7 +480,6 @@ spawnObject() {
 
             this.objectsClicked++;
             this.objects.splice(i, 1);
-            this.scoreElement.textContent = this.score;
 
             // Эффект клика (пульсация канваса)
             this.canvas.style.transform = 'scale(0.98)';
@@ -523,9 +522,14 @@ spawnObject() {
     if (this.gameLoop) clearInterval(this.gameLoop);
     if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
     
-    // Показываем экран победы (без задержки для теста)
-    document.getElementById('game-screen').classList.remove('active');
-    document.getElementById('win-screen').classList.add('active');
+    // Переход на экран победы с задержкой
+    setTimeout(() => {
+        console.log('Переход на экран победы');
+        const gameScreen = document.getElementById('game-screen');
+        const winScreen = document.getElementById('win-screen');
+        if (gameScreen) gameScreen.classList.remove('active');
+        if (winScreen) winScreen.classList.add('active');
+    }, 1500);
 }
     
     // Переход на экран победы
@@ -647,6 +651,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
