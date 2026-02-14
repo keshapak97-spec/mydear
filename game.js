@@ -22,7 +22,7 @@ class HeartCatcherGame {
     initializeVariables() {
         // Настройки игры
         this.score = 0;
-        this.targetScore = 100;
+        this.targetScore = 500;
         this.gameActive = false;
         this.paused = false;
         
@@ -515,30 +515,36 @@ spawnObject() {
     }
     
     winGame() {
-        console.log('Победа! Набрано очков:', this.score);
-        this.gameActive = false;
-        
-        // Останавливаем игровые интервалы
-        if (this.spawnInterval) {
-            clearInterval(this.spawnInterval);
-            this.spawnInterval = null;
-        }
-        if (this.gameLoop) {
-            clearInterval(this.gameLoop);
-            this.gameLoop = null;
-        }
-        
-        // Переход на экран победы
-        setTimeout(() => {
-            console.log('Переход на экран победы');
-            
-            const gameScreen = document.getElementById('game-screen');
-            const winScreen = document.getElementById('win-screen');
-            
-            if (gameScreen) gameScreen.classList.remove('active');
-            if (winScreen) winScreen.classList.add('active');
-        }, 1500);
+    console.log('Победа! Набрано очков:', this.score);
+    this.gameActive = false;
+    
+    // Останавливаем интервалы
+    if (this.spawnInterval) {
+        clearInterval(this.spawnInterval);
+        this.spawnInterval = null;
     }
+    if (this.gameLoop) {
+        clearInterval(this.gameLoop);
+        this.gameLoop = null;
+    }
+    
+    // Останавливаем requestAnimationFrame, если он используется
+    if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = null;
+    }
+    
+    // Переход на экран победы
+    setTimeout(() => {
+        console.log('Переход на экран победы');
+        
+        const gameScreen = document.getElementById('game-screen');
+        const winScreen = document.getElementById('win-screen');
+        
+        if (gameScreen) gameScreen.classList.remove('active');
+        if (winScreen) winScreen.classList.add('active');
+    }, 1500);
+}
     
     createConfetti() {
         this.confetti = [];
@@ -647,6 +653,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
