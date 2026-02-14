@@ -22,14 +22,14 @@ class HeartCatcherGame {
     initializeVariables() {
         // Настройки игры
         this.score = 0;
-        this.targetScore = 600;
+        this.targetScore = 500;
         this.gameActive = false;
         this.paused = false;
         
         // Игровые объекты
         this.objects = [];
         this.baseSpeed = 1.35;
-        this.speedIncrease = 0.001;
+        this.speedIncrease = 0.0007;
         this.currentSpeed = this.baseSpeed;
         
         // Статистика
@@ -647,6 +647,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
