@@ -515,8 +515,12 @@ spawnObject() {
     }
     
     winGame() {
-    console.log('Победа! Набрано очков:', this.score);
+    console.log('Победа!');
     this.gameActive = false;
+
+    document.getElementById('game-screen').classList.remove('active');
+    document.getElementById('win-screen').classList.add('active');
+}
     
     // Останавливаем интервалы
     if (this.spawnInterval) {
@@ -653,6 +657,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
