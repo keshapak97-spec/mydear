@@ -25,18 +25,18 @@ body {
     position: relative;
 }
 
-/* Общее правило для всех экранов */
 .screen {
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
 }
 
-/* Активный экран */
 .screen.active {
-    display: flex !important;  /* !important для проверки */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    display: flex;
 }
 
 h1 {
