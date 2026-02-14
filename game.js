@@ -522,17 +522,7 @@ spawnObject() {
     if (this.gameLoop) clearInterval(this.gameLoop);
     if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
     
-    // Переход на экран победы с задержкой
-    setTimeout(() => {
-        console.log('Переход на экран победы');
-        const gameScreen = document.getElementById('game-screen');
-        const winScreen = document.getElementById('win-screen');
-        if (gameScreen) gameScreen.classList.remove('active');
-        if (winScreen) winScreen.classList.add('active');
-    }, 1500);
-}
-    
-    // Переход на экран победы
+
     setTimeout(() => {
         console.log('Переход на экран победы');
         
@@ -651,6 +641,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
 
 
 
