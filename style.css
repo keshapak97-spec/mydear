@@ -290,18 +290,6 @@ h2 {
     transform: translateY(-50%);
     font-size: 1.2rem;
 }
-/* Стили купона как на изображении */
-.coupon {
-    width: 90%;
-    max-width: 320px;
-    background: white;
-    border-radius: 2px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    margin: 20px 0;
-    border: 1px solid #e0e0e0;
-    font-family: 'Arial', sans-serif;
-}
 
 .coupon-header {
     background: #e31837; /* Красный как на картинке */
@@ -378,4 +366,5 @@ h2 {
     color: #666;
 
 }
+
 
